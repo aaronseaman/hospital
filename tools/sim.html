@@ -1,0 +1,42 @@
+<!doctype html><html><body><canvas id="c" width="420" height="216"></canvas><script type="module">
+import { Match } from '../src/match.js';
+import { FIGHTERS } from '../src/fighters.js';
+import { STAGES } from '../src/stages.js';
+const q = new URLSearchParams(location.search);
+const frames = +(q.get('frames') || 2500);
+const g = document.getElementById('c').getContext('2d');
+const log = [];
+let errors = 0;
+const ids = FIGHTERS.map(f => f.id);
+const only = q.get('only');
+const list = only ? [only] : ids;
+const t0 = performance.now();
+for (let i = 0; i < list.length; i++) {
+  const a = list[i], b = ids[(ids.indexOf(a) + 7) % ids.length];
+  const stage = STAGES[i % STAGES.length].id;
+  let m;
+  try {
+    m = new Match({ mode: 'versus', p1: { id: a, ctrl: 'cpu', cpuLevel: 4 }, p2: { id: b, ctrl: 'cpu', cpuLevel: 3 }, stage, night: i % 2 === 1, rounds: 2, timer: 99, hazards: true, mods: i % 3 === 0 ? ['outbreak', 'jcaho', 'fishday'] : [], skipIntro: false }, { onEnd: (r) => { m.ended = r; }, settings: { touch: i % 2 === 0 } });
+    let specialsUsed = new Set();
+    for (let fr = 0; fr < frames && !m.ended; fr++) {
+      for (const f of m.fighters) {
+        if (fr % 70 === f.side * 35 && f.canAct()) {
+          const r = Math.random();
+          if (r < 0.25) { f.meter = 300; f.aiAction = { type: 'super', level: 1 + Math.floor(Math.random() * 3) }; }
+          else if (r < 0.3) { f.hp = Math.min(f.hp, f.maxHp * 0.2); f.meter = 300; f.aiAction = { type: 'super', level: 3 }; }
+          else { const sp = f.def.specials[Math.floor(Math.random() * f.def.specials.length)]; specialsUsed.add(f.def.id + ':' + sp.id); f.aiAction = { type: 'special', spec: sp, str: Math.floor(Math.random() * 3), ex: Math.random() < 0.3 }; }
+        }
+      }
+      m.update([null, null]);
+      if (fr % 7 === 0) m.draw(g, 420, 216);
+    }
+    log.push(`${a} vs ${b} @${stage}: phase=${m.phase} round=${m.round} hp=${m.fighters.map(f => Math.round(f.hp)).join('/')} ended=${!!m.ended} specials=${specialsUsed.size}`);
+  } catch (e) {
+    errors++;
+    log.push(`ERROR ${a} vs ${b}: ${e.message}\n${e.stack}`);
+  }
+}
+log.push('time ' + Math.round(performance.now() - t0) + 'ms, errors ' + errors);
+window.result = log.join('\n');
+window.done = true;
+</script></body></html>

@@ -1,0 +1,38 @@
+<!doctype html><html><body style="background:#333"><script type="module">
+import { lookFor } from '../src/looks.js';
+import { getPortrait } from '../src/sprites.js';
+import { drawText } from '../src/font.js';
+function base(L, mask) {
+  const c = document.createElement('canvas'); c.width = c.height = L;
+  const g = c.getContext('2d');
+  g.fillStyle = '#1c1430'; g.fillRect(0, 0, L, L);
+  g.fillStyle = '#261a40';
+  for (let x = -L; x < L * 2; x += 10) { g.beginPath(); g.moveTo(x, 0); g.lineTo(x + 5, 0); g.lineTo(x + 5 - L, L); g.lineTo(x - L, L); g.fill(); }
+  const pad = mask ? Math.round(L * 0.12) : 0;
+  // red band
+  g.fillStyle = '#e02838'; g.fillRect(0, L - pad - 14, L, 14);
+  g.fillStyle = '#ff7080'; g.fillRect(0, L - pad - 14, L, 1);
+  // portrait
+  const P = L - pad * 2 - 4;
+  const por = getPortrait(lookFor('trauma'), 'idle1', 40, 40);
+  const sc = Math.max(1, Math.floor((P - 6) / 40));
+  g.imageSmoothingEnabled = false;
+  g.drawImage(por, Math.round(L / 2 - 20 * sc) + 2, pad + 1, 40 * sc, 40 * sc);
+  // cross badge
+  const bx = pad + 3, by = pad + 3;
+  g.fillStyle = '#140c1c'; g.fillRect(bx + 3, by - 1, 7, 15); g.fillRect(bx - 1, by + 3, 15, 7);
+  g.fillStyle = '#ffffff'; g.fillRect(bx + 4, by, 5, 13); g.fillRect(bx, by + 4, 13, 5);
+  g.fillStyle = '#e02030'; g.fillRect(bx + 5, by + 1, 3, 11); g.fillRect(bx + 1, by + 5, 11, 3);
+  drawText(g, 'FIGHT!', L / 2, L - pad - 11, { color: '#ffffff', outline: '#140c1c', align: 'center' });
+  return c;
+}
+function up(src, s) { const c = document.createElement('canvas'); c.width = src.width * s; c.height = src.height * s; const g = c.getContext('2d'); g.imageSmoothingEnabled = false; g.drawImage(src, 0, 0, c.width, c.height); return c; }
+window.icons = {
+  'icon-192.png': up(base(64), 3).toDataURL(),
+  'icon-512.png': up(base(64), 8).toDataURL(),
+  'icon-maskable-512.png': up(base(64, true), 8).toDataURL(),
+  'apple-touch-icon.png': up(base(60), 3).toDataURL(),
+};
+for (const k in window.icons) { const i = new Image(); i.src = window.icons[k]; i.style.margin = '4px'; document.body.appendChild(i); }
+window.done = true;
+</script></body></html>

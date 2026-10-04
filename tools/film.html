@@ -1,0 +1,40 @@
+<!doctype html><html><head><style>body{margin:0;background:#222}canvas{image-rendering:pixelated;margin:2px}</style></head><body><script type="module">
+import { Match } from '../src/match.js';
+import { FIGHTER_BY_ID } from '../src/fighters.js';
+const q = new URLSearchParams(location.search);
+const p1 = q.get('p1') || 'trauma', p2 = q.get('p2') || 'surgeon';
+const acts = JSON.parse(q.get('acts') || '[]');
+const caps = JSON.parse(q.get('caps') || '[10,20,30]');
+const S = +(q.get('s') || 1);
+const W = 400;
+const m = new Match({ mode: q.get('mode') || 'versus', p1: { id: p1, ctrl: 'dummy' }, p2: { id: p2, ctrl: q.get('cpu') ? 'cpu' : 'dummy', cpuLevel: 3 }, stage: q.get('stage') || 'er', night: q.get('night') === '1', rounds: 2, timer: 99, hazards: false, skipIntro: true }, { onEnd: () => {}, settings: {} });
+m.phase = 'fight';
+m.fighters[0].x = +(q.get('x1') || 340); m.fighters[1].x = +(q.get('x2') || 420);
+if (q.get('hp2')) m.fighters[1].hp = +q.get('hp2');
+if (q.get('hp1')) m.fighters[0].hp = +q.get('hp1');
+const maxF = Math.max(...caps);
+const blank = () => ({ left: false, right: false, up: false, down: false, press: {}, hold: {} });
+let hold = [blank(), blank()];
+for (let fr = 0; fr <= maxF; fr++) {
+  for (const a of acts) if (a.at === fr) {
+    const f = m.fighters[a.who || 0];
+    if (a.meter) f.meter = a.meter;
+    if (a.hold) hold[a.who || 0] = Object.assign(blank(), a.hold);
+    if (a.press) { hold[a.who || 0].press = a.press; setTimeout(() => {}, 0); a._clear = true; }
+    if (a.a) { if (a.a.type === 'special') a.a.spec = f.def.specials[a.a.idx || 0]; const wi = a.who || 0; f.ai = f.ai || { p: { aggro: 0 }, wantTech: () => false, update: () => hold[wi] }; f.aiAction = a.a; }
+  }
+  for (let i = 0; i < 2; i++) if (!m.fighters[i].ai || m.fighters[i].ctrl !== 'cpu') { m.fighters[i].setInput(hold[i]); }
+  m.phase = m.phase === 'roundcall' || m.phase === 'intro' ? 'fight' : m.phase;
+  // emulate update without overriding inputs: call internal pieces
+  const inputs = [hold[0], hold[1]];
+  m.update(inputs);
+  for (const h of hold) h.press = {};
+  if (caps.includes(fr)) {
+    const c = document.createElement('canvas'); c.width = W; c.height = 216; c.style.width = W * S + 'px'; c.style.height = 216 * S + 'px';
+    const g = c.getContext('2d'); m.draw(g, W, 216);
+    g.fillStyle = '#fff'; g.font = '10px monospace'; g.fillText('f' + fr + ' ' + m.fighters[0].state + '/' + m.fighters[1].state + ' ' + m.fighters[0].getPose(), 4, 212);
+    document.body.appendChild(c);
+  }
+}
+window.done = true;
+</script></body></html>
