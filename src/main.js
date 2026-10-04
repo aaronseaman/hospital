@@ -228,6 +228,17 @@ class Game {
       this.stack[i].draw(g);
       this.collecting = false;
     }
+    // touch BACK button on menu screens (landscape has no on-screen controls there)
+    const topS = this.top();
+    if (this.touchMode && !this.portrait && topS && !(topS instanceof FightScreen) && !(topS instanceof TitleScreen) && !(topS instanceof DemoScreen) && !topS.noBack) {
+      const bx = 2, by = this.H - 13, bw = 34, bh = 11;
+      rect(g, bx - 1, by - 1, bw + 2, bh + 2, '#140c1c');
+      rect(g, bx, by, bw, bh, '#5a2a48');
+      drawText(g, '{BACK', bx + bw / 2, by + 3, { font: 'small', color: '#ffffff', align: 'center' });
+      this.collecting = true;
+      this.region(bx - 2, by - 4, bw + 6, bh + 6, () => (this.input.virtualBack = true));
+      this.collecting = false;
+    }
     g.restore();
     const top = this.top();
     const fight = top instanceof FightScreen || (top instanceof PauseScreen);
@@ -257,6 +268,11 @@ class Game {
     }
   }
 }
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  window.__installPrompt = e;
+});
 
 const a11y = document.getElementById('a11y');
 window.__a11y = (t) => {

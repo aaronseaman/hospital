@@ -167,6 +167,12 @@ export class MainMenu {
       { label: 'HOW TO PLAY', desc: 'CONTROLS, CHART GAUGE, ADRENALINE, AND OTHER THINGS NOBODY TAUGHT YOU IN SCHOOL.', onSelect: () => game.push(new HowToScreen(game)) },
       { label: 'OPTIONS', desc: 'CONTROLS, DIFFICULTY, AUDIO, ACCESSIBILITY.', onSelect: () => game.push(new OptionsScreen(game)) },
       { label: 'CREDITS', desc: 'THE PEOPLE RESPONSIBLE. PLEASE DIRECT COMPLAINTS TO RISK MANAGEMENT.', onSelect: () => game.go(new CreditsScreen(game, () => game.go(new MainMenu(game)))) },
+      { label: 'INSTALL APP', desc: 'ADD HOSPITAL FIGHTER TO YOUR DEVICE. WORKS OFFLINE. NO PRIOR AUTH NEEDED.', color: '#80ff80', hidden: !window.__installPrompt, onSelect: () => {
+        const p = window.__installPrompt;
+        if (!p) return;
+        p.prompt();
+        p.userChoice.finally(() => { window.__installPrompt = null; game.go(new MainMenu(game)); });
+      } },
     ], { sel, lineH: 11 });
     this.hero = FIGHTERS[Math.floor(Math.random() * FIGHTERS.length)];
     Sound.music('title');
@@ -419,12 +425,12 @@ export class CharSelect {
       const f = FIGHTERS[fi];
       drawText(g, f.dept, ib.x + 4, ib.y + 4, { font: 'small', color: f.color === '#2e2c3c' ? '#9090c0' : f.color });
       textBox(g, f.bio, ib.x + 4, ib.y + 12, ib.w - 8, { font: 'small', color: '#d0c8e8' });
-      let yy = ib.y + 34;
+      let yy = ib.y + 29;
       for (const sp of f.specials) {
-        if (yy > ib.y + ib.h - 7) break;
+        if (yy > ib.y + ib.h - 6) break;
         drawText(g, sp.name, ib.x + 4, yy, { font: 'small', color: '#ffe080' });
         drawText(g, MOTION_TEXT[sp.input] + (sp.btn === 'p' ? 'P' : sp.btn === 'k' ? 'K' : 'P/K'), ib.x + ib.w - 4, yy, { font: 'small', color: '#a0d0ff', align: 'right' });
-        yy += 7;
+        yy += 6;
       }
     } else {
       const d = DLC[fi - FIGHTERS.length];

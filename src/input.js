@@ -83,6 +83,7 @@ export class Input {
     return n;
   }
   endFrame() {
+    this.virtualBack = false;
     this.keyEdges.clear();
     this.taps = [];
     this.anyKey = false;
@@ -175,6 +176,7 @@ export class Input {
       if (edge(3)) r.alt = true;
     }
     if (side === undefined || side === 0) this.touch.menu(r);
+    if (this.virtualBack && (side === undefined || side === 0)) r.back = true;
     return r;
   }
 }

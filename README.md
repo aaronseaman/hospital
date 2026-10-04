@@ -14,6 +14,8 @@ It's an installable PWA that runs on desktop and iPhone (portrait *and* landscap
 - **Modes**: Grand Rounds (story with rivals, choices and two endings per character), Arcade, Versus (vs CPU or local 2P), Training (hitboxes, dummy settings), Extreme Battle (Outbreak, Budget Cuts, Full Code, JCAHO Inspection, Fish Day), plus Orders & Rank progression and an attract-mode demo.
 - **Classic 6-button or Modern controls** (auto-combos, one-button supers), keyboard, gamepad and touch.
 - Procedural pixel-art sprites, chiptune soundtrack and SFX synthesized live with Web Audio, and an announcer voice (toggleable).
+- A Hospital Cup broadcast booth: live play-by-play from a doctor and color commentary from an analyst who is definitely not an administrator.
+- Accessibility: Modern controls with auto-combos and one-button supers, high-contrast HUD, screen-shake toggle, text for every announcer call, and screen-reader announcements.
 - Online, Residency, the Break Room Hub and the Shift Pass are all... pending prior authorization.
 
 ## Controls
