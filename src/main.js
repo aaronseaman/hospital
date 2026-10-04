@@ -5,6 +5,7 @@ import { Sound } from './audio.js';
 import { TitleScreen, FightScreen, PauseScreen, DemoScreen } from './screens.js';
 import { drawText } from './font.js';
 import { rect, fillPoly } from './fx.js';
+import { tickSprites } from './sprites.js';
 
 const GAME_H = 216;
 const MIN_W = 384;
@@ -194,6 +195,7 @@ class Game {
 
   update() {
     this.t++;
+    if (this.t % 60 === 0) tickSprites();
     this.input.poll();
     const top = this.top();
     const fight = top instanceof FightScreen;
@@ -255,6 +257,11 @@ class Game {
     }
   }
 }
+
+const a11y = document.getElementById('a11y');
+window.__a11y = (t) => {
+  if (a11y) a11y.textContent = String(t).toLowerCase();
+};
 
 function start() {
   try {

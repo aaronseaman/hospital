@@ -8,7 +8,7 @@ export const FIGHTERS = [
     bio: 'Has worked 31 consecutive shifts. Believes the answer is always a stronger fist.',
     taunt: 'HAVE YOU TRIED TURNING IT OFF AND ON AGAIN?',
     specials: [
-      { id: 'syringe', name: 'SYRINGE SHOT', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'syringe', dmg: 60, speed: [2.6, 3.4, 4.2], startup: 12, recovery: 30, ex: { dmg: 100, hits: 2, speed: 4.6 } },
+      { id: 'syringe', name: 'SYRINGE SHOT', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'syringe', dmg: 62, speed: [2.6, 3.4, 4.2], startup: 12, recovery: 26, ex: { dmg: 100, hits: 2, speed: 4.6 } },
       { id: 'rib', name: 'RIB SPREADER UPPER', input: 'dp', btn: 'p', modern: 'f', type: 'rising', dmg: [90, 110, 130], rise: [5.2, 6.4, 7.6], vx: 1.2, invuln: 6, startup: 3, recovery: 26, ex: { dmg: 160, hits: 3, invuln: 14 } },
       { id: 'cart', name: 'CRASH CART KICK', input: 'qcb', btn: 'k', modern: 'b', type: 'spin', dmg: 42, hits: [1, 2, 3], speed: 2.6, startup: 10, recovery: 14, hover: true, ex: { hits: 5, dmg: 40 } },
     ],
@@ -23,7 +23,7 @@ export const FIGHTERS = [
   },
   {
     id: 'nightingale', name: 'NURSE NIGHTINGALE', short: 'NIGHTINGALE', title: 'THE STRONGEST NURSE IN THE WORLD', dept: 'NURSING',
-    hp: 950, walkF: 2.0, walkB: 1.6, rival: 'admin', color: '#f07aac', jump: 1.06,
+    hp: 930, walkF: 1.9, walkB: 1.55, rival: 'admin', color: '#f07aac', jump: 1.06,
     bio: 'Twelve-hour shifts, thirteen-hour legs. Has kicked through four staffing shortages.',
     taunt: '*SIGHS AT PAGER* ...THE THIRD TIME THIS MINUTE.',
     specials: [
@@ -42,11 +42,11 @@ export const FIGHTERS = [
   },
   {
     id: 'surgeon', name: 'THE SURGEON', short: 'SURGEON', title: 'THE STERILE FIELD MARSHAL', dept: 'SURGERY',
-    hp: 1050, walkF: 1.5, walkB: 1.4, rival: 'trauma', color: '#3c8a58',
+    hp: 1080, walkF: 1.6, walkB: 1.45, rival: 'trauma', color: '#3c8a58',
     bio: 'Has never once said "I don\'t know." Scrubs in for breakfast.',
     taunt: 'GO HOME AND BE A FAMILY MAN... AFTER MY 6 AM CASE.',
     specials: [
-      { id: 'sonic', name: 'SUTURE SONIC', input: 'chargeBF', btn: 'p', modern: 'n', type: 'projectile', proj: 'thread', dmg: 65, speed: [2.8, 3.6, 4.6], startup: 10, recovery: 20, ex: { dmg: 110, hits: 2, speed: 5 } },
+      { id: 'sonic', name: 'SUTURE SONIC', input: 'chargeBF', btn: 'p', modern: 'n', type: 'projectile', proj: 'thread', dmg: 72, speed: [2.8, 3.6, 4.6], startup: 9, recovery: 18, ex: { dmg: 110, hits: 2, speed: 5 } },
       { id: 'flash', name: 'SCALPEL FLASH', input: 'chargeDU', btn: 'k', modern: 'f', type: 'rising', pose: 'hkA', dmg: [100, 120, 140], rise: [5.0, 6.2, 7.4], vx: 0.6, invuln: 8, startup: 3, recovery: 28, fx: 'slash', ex: { dmg: 170, hits: 2, invuln: 16 } },
       { id: 'retract', name: 'RETRACTOR REACH', input: 'qcf', btn: 'k', modern: 'b', type: 'stretch', pose: 'stretchKA', dmg: 80, startup: 13, active: 4, recovery: 20, guard: 'low', ex: { dmg: 120 } },
     ],
@@ -84,7 +84,7 @@ export const FIGHTERS = [
     bio: 'Has caught 4,000 drug interactions. Has been thanked twice.',
     taunt: 'THAT WILL BE A $45 CO-PAY. CASH ONLY.',
     specials: [
-      { id: 'refill', name: 'REFILL', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'bottle', dmg: 50, lob: true, speed: [2.0, 2.8, 3.6], vy: 4.4, startup: 14, recovery: 26, onLand: 'pills', ex: { dmg: 70, speed: 3.2, onLand: 'pills2' } },
+      { id: 'refill', name: 'REFILL', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'bottle', dmg: 60, lob: true, speed: [2.0, 2.8, 3.6], vy: 4.4, startup: 12, recovery: 22, onLand: 'pills', ex: { dmg: 70, speed: 3.2, onLand: 'pills2' } },
       { id: 'auth', name: 'PRIOR AUTH BEAM', input: 'qcb', btn: 'p', modern: 'b', type: 'beam', dmg: 90, hits: 3, startup: 12, delay: 46, dur: 24, recovery: 16, y: 40, h: 16, color: '#ffd040', label: 'PENDING', ex: { delay: 24, dmg: 130, hits: 4 } },
       { id: 'cap', name: 'CHILDPROOF CAP', input: 'dp', btn: 'p', modern: 'f', type: 'rising', dmg: [85, 105, 125], rise: [5.0, 6.0, 7.0], vx: 1, invuln: 5, startup: 4, recovery: 26, ex: { dmg: 150, hits: 3, invuln: 12 } },
     ],
@@ -103,7 +103,7 @@ export const FIGHTERS = [
     bio: 'Lives in a dark room. Has not seen a patient\'s face since 2009. Clinical correlation recommended.',
     taunt: 'FINDINGS: NONSPECIFIC. CLINICAL CORRELATION RECOMMENDED.',
     specials: [
-      { id: 'xray', name: 'X-RAY READ', input: 'qcf', btn: 'p', modern: 'n', type: 'beam', dmg: 70, hits: 2, startup: 13, delay: 0, dur: 14, recovery: 22, range: [140, 180, 220], y: 44, h: 12, color: '#a8f0ff', effect: 'xray', ex: { dmg: 110, hits: 3, range: [260, 260, 260] } },
+      { id: 'xray', name: 'X-RAY READ', input: 'qcf', btn: 'p', modern: 'n', type: 'beam', dmg: 60, hits: 2, startup: 16, delay: 0, dur: 14, recovery: 27, range: [130, 160, 190], y: 44, h: 12, color: '#a8f0ff', effect: 'xray', ex: { dmg: 110, hits: 3, range: [260, 260, 260] } },
       { id: 'contrast', name: 'CONTRAST RUSH', input: 'qcf', btn: 'k', modern: 'f', type: 'rush', dmg: 90, dur: [14, 18, 22], speed: 5.2, startup: 9, recovery: 18, fx: 'glow', ex: { dmg: 130, hits: 2, armor: 1 } },
       { id: 'incidental', name: 'INCIDENTAL FINDING', input: 'dp', btn: 'p', modern: 'b', type: 'rising', dmg: [85, 105, 125], rise: [5.0, 6.0, 7.0], vx: 1.2, invuln: 5, startup: 4, recovery: 26, ex: { dmg: 150, hits: 3, invuln: 12 } },
     ],
@@ -122,7 +122,7 @@ export const FIGHTERS = [
     bio: 'Bench presses patients. Has never read a chart. "Bro, it\'s just carpentry."',
     taunt: 'BRO. DO YOU EVEN LIFT? (THE PATIENT, I MEAN.)',
     specials: [
-      { id: 'saw', name: 'BONE SAW', input: 'hcf', btn: 'p', modern: 'n', type: 'grab', dmg: [180, 200, 220], range: [30, 34, 38], startup: 5, recovery: 34, ex: { dmg: 250, range: 44 } },
+      { id: 'saw', name: 'BONE SAW', input: 'hcf', btn: 'p', modern: 'n', type: 'grab', dmg: [175, 190, 205], range: [28, 32, 36], startup: 5, recovery: 34, ex: { dmg: 250, range: 44 } },
       { id: 'cast', name: 'CAST CUTTER', input: 'qcf', btn: 'k', modern: 'f', type: 'spin', poses: ['lariat1', 'lariat2'], dmg: 45, hits: [2, 3, 3], speed: 1.0, startup: 6, recovery: 18, invulnUpper: true, ex: { hits: 4, dmg: 45, invuln: 10 } },
       { id: 'protein', name: 'PROTEIN CHARGE', input: 'qcb', btn: 'p', modern: 'b', type: 'rush', dmg: 110, dur: [16, 20, 24], speed: 4.2, startup: 12, recovery: 20, armor: 1, pose: 'dash', ex: { dmg: 150, armor: 2 } },
     ],
@@ -156,12 +156,12 @@ export const FIGHTERS = [
   },
   {
     id: 'psych', name: 'PSYCHIATRIST', short: 'PSYCH', title: 'THE MIND PALACE GUARD', dept: 'PSYCHIATRY',
-    hp: 1000, walkF: 1.4, walkB: 1.3, rival: 'anesth', color: '#8a6a40',
+    hp: 1040, walkF: 1.55, walkB: 1.35, rival: 'anesth', color: '#8a6a40',
     bio: 'Has a calm voice, a leather couch and a 50-minute timer. Every fight is a session.',
     taunt: 'AND HOW DOES LOSING MAKE YOU FEEL?',
     specials: [
       { id: 'reframe', name: 'COGNITIVE REFRAME', input: 'qcb', btn: 'p', modern: 'b', type: 'counter', dmg: 130, dur: 32, recovery: 22, ex: { dmg: 170, dur: 40 } },
-      { id: 'alliance', name: 'THERAPEUTIC ALLIANCE', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'bubble', dmg: 55, speed: [1.8, 2.4, 3.0], startup: 13, recovery: 24, effect: 'drainMeter', w: 16, h: 14, ex: { dmg: 80, hits: 2, speed: 3.2 } },
+      { id: 'alliance', name: 'THERAPEUTIC ALLIANCE', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'bubble', dmg: 65, speed: [2.2, 2.8, 3.4], startup: 11, recovery: 20, effect: 'drainMeter', w: 16, h: 14, ex: { dmg: 80, hits: 2, speed: 3.2 } },
       { id: 'ink', name: 'INK BLOT', input: 'dp', btn: 'p', modern: 'f', type: 'burst', pose: 'upA', dmg: 100, hits: 2, startup: 5, active: 9, recovery: 26, invuln: 6, fx: 'ink', w: 34, h: 54, ox: 10, oy: 46, ex: { dmg: 150, hits: 3, invuln: 12 } },
     ],
     super: { name: '50-MINUTE HOUR', type: 'grab', color: '#d0a060', line: 'LIE DOWN. TELL ME ABOUT YOUR MOTHER.' },
@@ -198,7 +198,7 @@ export const FIGHTERS = [
     bio: 'Has keys to every door. Has seen everything. Has mopped up worse than you.',
     taunt: 'I JUST MOPPED THAT.',
     specials: [
-      { id: 'mop', name: 'MOP SLIDE', input: 'qcf', btn: 'k', modern: 'f', type: 'rush', pose: 'slide', dmg: 80, dur: [14, 18, 22], speed: 4.6, startup: 7, recovery: 16, guard: 'low', kd: true, ex: { dmg: 120, hits: 2 } },
+      { id: 'mop', name: 'MOP SLIDE', input: 'qcf', btn: 'k', modern: 'f', type: 'rush', pose: 'slide', dmg: 90, dur: [14, 18, 22], speed: 5.0, startup: 7, recovery: 16, guard: 'low', kd: true, ex: { dmg: 120, hits: 2 } },
       { id: 'wet', name: 'WET FLOOR', input: 'qcb', btn: 'p', modern: 'b', type: 'trap', trap: 'wetfloor', dist: [50, 90, 130], startup: 14, recovery: 18, ex: { dist: [70, 70, 70], count: 2 } },
       { id: 'bio', name: 'BIOHAZARD', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'biobag', dmg: 40, lob: true, speed: [1.8, 2.6, 3.4], vy: 4.8, startup: 14, recovery: 24, onLand: 'cloud', ex: { dmg: 60, onLand: 'cloud2' } },
     ],
@@ -217,7 +217,7 @@ export const FIGHTERS = [
     bio: 'Eats lunch at 70 mph. Has carried a 300-pound man down six flights of stairs. Twice. Same man.',
     taunt: 'I\'VE SEEN WORSE. ON MY WAY HERE.',
     specials: [
-      { id: 'siren', name: 'SIREN RUSH', input: 'qcf', btn: 'p', modern: 'n', type: 'rush', dmg: 95, dur: [14, 18, 22], speed: 5.0, startup: 9, recovery: 16, fx: 'siren', ex: { dmg: 140, hits: 2, armor: 1 } },
+      { id: 'siren', name: 'SIREN RUSH', input: 'qcf', btn: 'p', modern: 'n', type: 'rush', dmg: 105, dur: [14, 18, 22], speed: 5.2, startup: 8, recovery: 13, fx: 'siren', ex: { dmg: 140, hits: 2, armor: 1 } },
       { id: 'board', name: 'BACKBOARD BUSTER', input: 'qcf', btn: 'k', modern: 'b', type: 'strike', pose: 'slamA', windup: 'liftA', dmg: 110, startup: 17, active: 4, recovery: 18, guard: 'high', w: 34, h: 34, ox: 18, oy: 20, step: 2, ex: { dmg: 150, kd: true } },
       { id: 'lights', name: 'LIGHTS & SIRENS', input: 'dp', btn: 'p', modern: 'f', type: 'rising', dmg: [95, 115, 135], rise: [5.0, 6.0, 7.2], vx: 1.6, invuln: 5, startup: 3, recovery: 26, ex: { dmg: 160, hits: 3, invuln: 12 } },
     ],
@@ -257,7 +257,7 @@ export const FIGHTERS = [
     specials: [
       { id: 'support', name: 'SPIRITUAL SUPPORT', input: 'qcb', btn: 'p', modern: 'd', type: 'heal', amount: 60, dur: 50, recovery: 10, ex: { amount: 110, armor: 1 } },
       { id: 'silence', name: 'MOMENT OF SILENCE', input: 'qcb', btn: 'k', modern: 'b', type: 'counter', dmg: 120, dur: 30, recovery: 22, freeze: true, ex: { dmg: 170, dur: 40 } },
-      { id: 'water', name: 'HOLY WATER', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'water', dmg: 60, speed: [2.6, 3.4, 4.2], startup: 12, recovery: 24, ex: { dmg: 100, hits: 2 } },
+      { id: 'water', name: 'HOLY WATER', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'water', dmg: 70, speed: [2.8, 3.6, 4.4], startup: 11, recovery: 22, ex: { dmg: 100, hits: 2 } },
     ],
     super: { name: 'LAST RITES', type: 'rain', proj: 'light', color: '#fff0a0', line: 'BE AT PEACE.' },
     quotes: ['GO IN PEACE. AND IN PIECES.', 'I WILL PRAY FOR YOUR RECOVERY. IT WILL TAKE A WHILE.', 'BLESSED ARE THE BLOCKERS.'],
@@ -293,9 +293,9 @@ export const FIGHTERS = [
     bio: 'Appears only when you stop looking for him. Can fix anything by unplugging it.',
     taunt: 'HAVE YOU TRIED TURNING IT OFF AND ON AGAIN?',
     specials: [
-      { id: 'ticket', name: 'TICKET ESCALATION', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'ticket', dmg: 50, speed: [2.2, 2.8, 3.4], startup: 12, recovery: 22, grow: true, ex: { dmg: 90, hits: 2 } },
-      { id: 'restart', name: 'HAVE YOU RESTARTED?', input: 'dp', btn: 'any', modern: 'f', type: 'teleport', startup: 10, recovery: 10, ex: { recovery: 4 } },
-      { id: 'bsod', name: 'BLUE SCREEN', input: 'qcb', btn: 'p', modern: 'b', type: 'burst', pose: 'beamA', dmg: 90, hits: 2, startup: 7, active: 10, recovery: 22, invuln: 6, fx: 'bsod', w: 56, h: 64, ox: 6, oy: 34, ex: { dmg: 130, hits: 3, invuln: 12 } },
+      { id: 'ticket', name: 'TICKET ESCALATION', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'ticket', dmg: 55, speed: [2.6, 3.2, 3.8], startup: 11, recovery: 20, grow: true, ex: { dmg: 90, hits: 2 } },
+      { id: 'restart', name: 'HAVE YOU RESTARTED?', input: 'dp', btn: 'any', modern: 'f', type: 'teleport', startup: 9, recovery: 7, ex: { recovery: 3 } },
+      { id: 'bsod', name: 'BLUE SCREEN', input: 'qcb', btn: 'p', modern: 'b', type: 'burst', pose: 'beamA', dmg: 105, hits: 2, startup: 6, active: 10, recovery: 22, invuln: 6, fx: 'bsod', w: 56, h: 64, ox: 6, oy: 34, ex: { dmg: 130, hits: 3, invuln: 12 } },
     ],
     super: { name: 'SYSTEM REBOOT', type: 'zone', color: '#4080ff', fx: 'bsod', line: 'INSTALLING UPDATES. DO NOT TURN OFF.' },
     quotes: ['TICKET CLOSED. RESOLUTION: USER ERROR.', 'YOUR PASSWORD HAS EXPIRED. SO HAVE YOU.', 'I\'M GOING TO NEED YOU TO RESTART. YOUR CAREER.'],
@@ -314,7 +314,7 @@ export const FIGHTERS = [
     specials: [
       { id: 'carb', name: 'CARB COUNT', input: 'qcf', btn: 'p', modern: 'n', type: 'projectile', proj: 'bread', dmg: 55, speed: [2.4, 3.2, 4.0], startup: 12, recovery: 24, effect: 'drainGauge', ex: { dmg: 90, hits: 2 } },
       { id: 'slash', name: 'SUPPLEMENT SLASH', input: 'qcf', btn: 'k', modern: 'f', type: 'rush', pose: 'mkA', dmg: 90, dur: [12, 16, 20], speed: 4.8, startup: 8, recovery: 16, ex: { dmg: 130, hits: 2 } },
-      { id: 'portion', name: 'PORTION CONTROL', input: 'hcf', btn: 'p', modern: 'b', type: 'grab', dmg: [140, 155, 170], range: [30, 32, 34], startup: 5, recovery: 30, effect: 'drainMeter', ex: { dmg: 200, range: 40 } },
+      { id: 'portion', name: 'PORTION CONTROL', input: 'hcf', btn: 'p', modern: 'b', type: 'grab', dmg: [135, 150, 165], range: [26, 28, 30], startup: 5, recovery: 30, effect: 'drainMeter', ex: { dmg: 200, range: 40 } },
     ],
     super: { name: 'FOOD PYRAMID', type: 'rain', proj: 'food', color: '#ffd060', line: 'EAT YOUR VEGETABLES!' },
     quotes: ['THAT WAS 400 CALORIES OF PURE DEFEAT.', 'BALANCED DIET. UNBALANCED FIGHT.', 'MODERATION IN ALL THINGS. EXCEPT WINNING.'],
@@ -327,7 +327,7 @@ export const FIGHTERS = [
   },
   {
     id: 'chief', name: 'CHIEF OF STAFF', short: 'CHIEF', title: 'MASTER OF THE MANDATORY', dept: 'EXECUTIVE', boss: true,
-    hp: 1050, walkF: 1.6, walkB: 1.4, rival: 'trauma', color: '#6a2a8a',
+    hp: 1020, walkF: 1.6, walkB: 1.4, rival: 'trauma', color: '#6a2a8a',
     bio: 'Has not touched a patient since 1994. Every utterance is an Executive Order.',
     taunt: 'LET\'S TAKE THIS OFFLINE. FOREVER.',
     specials: [

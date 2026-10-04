@@ -97,7 +97,7 @@ export class Fighter {
     return this.look.scale || 1;
   }
   get halfW() {
-    return 10 * this.s * (this.look.width || 1);
+    return 12.5 * this.s * (this.look.width || 1);
   }
   get airborne() {
     return this.y > 0.01;
@@ -129,12 +129,18 @@ export class Fighter {
       if (this.dirHist.length > 32) this.dirHist.shift();
       // double taps
       if (d === 6 && this.lastDir !== 6) {
-        if (this.clock - this.tapF < 14 && this.tapFrel) this.wantDash = 1;
+        if (this.clock - this.tapF < 14 && this.tapFrel) {
+          this.wantDash = 1;
+          this.wantDashT = this.clock;
+        }
         this.tapF = this.clock;
         this.tapFrel = false;
       }
       if (d === 4 && this.lastDir !== 4) {
-        if (this.clock - this.tapB < 14 && this.tapBrel) this.wantDash = -1;
+        if (this.clock - this.tapB < 14 && this.tapBrel) {
+          this.wantDash = -1;
+          this.wantDashT = this.clock;
+        }
         this.tapB = this.clock;
         this.tapBrel = false;
       }
@@ -142,6 +148,7 @@ export class Fighter {
       if (d !== 4) this.tapBrel = true;
     }
     this.lastDir = d;
+    if (this.wantDash && this.clock - this.wantDashT > 8) this.wantDash = 0;
     // charge
     if (d === 1 || d === 4 || d === 7) {
       this.chargeB++;
@@ -628,7 +635,7 @@ export class Fighter {
     if (!def) return false;
     this.move = {
       kind: 'normal', id, def, t: 0, startup: def.startup, active: def.active, recovery: def.recovery,
-      hits: 0, maxHits: 1, str: def.str, hitConfirmed: false, rehit: 99,
+      hits: 0, maxHits: 1, str: def.str, hitConfirmed: false, rehit: 0,
     };
     this.setState('attack');
     if (!this.airborne) this.vx = 0;

@@ -212,8 +212,8 @@ export class AI {
       else this.plan = this.r() < 0.5 ? 'back' : 'crouchback';
     } else {
       // close range
-      if (grab && r < 0.22) f.aiAction = { type: 'special', spec: grab, str: 1 };
-      else if (r < 0.18) f.aiAction = { type: 'throw', back: this.r() < 0.3 };
+      if (grab && r < 0.12) f.aiAction = { type: 'special', spec: grab, str: 1 };
+      else if (r < 0.2) f.aiAction = { type: 'throw', back: this.r() < 0.3 };
       else if (r < 0.5 * p.aggro + 0.15) {
         const opts = ['5lp', '2lk', '2lp', '5mp', '2mp', '5hp', '2hk', '5lk'];
         f.aiAction = { type: 'normal', id: opts[Math.floor(this.r() * opts.length)] };

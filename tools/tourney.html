@@ -1,0 +1,28 @@
+<!doctype html><html><body><script type="module">
+import { Match } from '../src/match.js';
+import { FIGHTERS } from '../src/fighters.js';
+const q = new URLSearchParams(location.search);
+const per = +(q.get('per') || 4);
+const lvl = +(q.get('lvl') || 3);
+const ids = FIGHTERS.map(f => f.id);
+const W = {}, L = {}, dmg = {}, rounds = {}, timeouts = { n: 0 }, frames = [];
+for (const id of ids) { W[id] = 0; L[id] = 0; dmg[id] = 0; }
+let errors = [];
+for (let i = 0; i < ids.length; i++) for (let k = 1; k <= per; k++) {
+  const a = ids[i], b = ids[(i + k * 3) % ids.length];
+  if (a === b) continue;
+  let m, res = null;
+  try {
+    m = new Match({ mode: 'versus', p1: { id: a, ctrl: 'cpu', cpuLevel: lvl }, p2: { id: b, ctrl: 'cpu', cpuLevel: lvl }, stage: 'or', rounds: 2, timer: 99, hazards: false, skipIntro: true }, { onEnd: (r) => (res = r), settings: {} });
+    let fr = 0;
+    while (!res && fr < 60 * 60 * 6) { m.update([null, null]); fr++; }
+    frames.push(fr);
+    if (res && res.winner !== null) { W[res.fighters[res.winner].id]++; L[res.fighters[1 - res.winner].id]++; }
+    for (const f of m.fighters) dmg[f.def.id] += f.stats.hits;
+  } catch (e) { errors.push(a + ' vs ' + b + ': ' + e.message + ' ' + e.stack); }
+}
+const rows = ids.map(id => `${id.padEnd(12)} W${String(W[id]).padStart(3)} L${String(L[id]).padStart(3)} hits ${dmg[id]}`);
+const avg = frames.reduce((a, b) => a + b, 0) / frames.length / 60;
+window.result = rows.join('\n') + `\navg match ${avg.toFixed(1)}s\n` + errors.join('\n');
+window.done = true;
+</script></body></html>

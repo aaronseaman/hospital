@@ -1,0 +1,21 @@
+<!doctype html><html><body><script type="module">
+import { Match } from '../src/match.js';
+const q = new URLSearchParams(location.search);
+const a = q.get('a'), opps = (q.get('b') || 'surgeon,trauma,psych,chief').split(',');
+const out = [];
+for (const b of opps) for (const side of [0, 1]) {
+  let res = null;
+  const p = [{ id: a, ctrl: 'cpu', cpuLevel: 3 }, { id: b, ctrl: 'cpu', cpuLevel: 3 }];
+  if (side) p.reverse();
+  const m = new Match({ mode: 'versus', p1: p[0], p2: p[1], stage: 'or', rounds: 2, timer: 99, hazards: false, skipIntro: true }, { onEnd: (r) => (res = r), settings: {} });
+  let fr = 0, specials = {};
+  while (!res && fr < 60 * 60 * 6) {
+    m.update([null, null]); fr++;
+    const f = m.fighters[side];
+    if (f.state === 'attack' && f.move && f.move.t === 1) { const k = f.move.kind + ':' + (f.move.spec ? f.move.spec.id || f.move.spec.type : f.move.id || ''); specials[k] = (specials[k] || 0) + 1; }
+  }
+  const me = m.fighters[side], op = m.fighters[1 - side];
+  out.push(`${a} vs ${b}: ${res && res.winner === side ? 'WIN' : 'LOSS'}\n  dealt ${JSON.stringify(me.stats.dmgBy)}\n  taken ${JSON.stringify(op.stats.dmgBy)}\n  used ${JSON.stringify(specials)}`);
+}
+window.result = out.join('\n'); window.done = true;
+</script></body></html>

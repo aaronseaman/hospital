@@ -22,7 +22,7 @@ export function drawHUD(g, m, W, H) {
   const low = m.timer !== Infinity && m.timer <= 10;
   drawText(g, tv, cx, 12, { scale: 2, color: low && m.frame % 30 < 15 ? '#ff4040' : '#ffffff', gradient: low ? null : ['#ffffff', '#ffffff', '#fff0b0', '#ffe080', '#ffd040', '#f0b020', '#e09010'] });
   // round markers
-  for (let s = 0; s < 2; s++) {
+  for (let s = 0; s < 2 && !m.training; s++) {
     const f = m.fighters[s];
     for (let i = 0; i < m.roundsToWin; i++) {
       const won = i < f.roundsWon;

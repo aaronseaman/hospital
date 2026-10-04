@@ -95,6 +95,7 @@ export class TitleScreen {
     drawText(g, 'INSERT CO-PAY', W / 2, 160, { color: '#ffd040', outline: O, align: 'center' });
     rect(g, 0, H - 12, W, 12, 'rgba(0,0,0,0.7)');
     drawText(g, '(C) 2026 ST. WORLD WARRIOR MED. NOT A REAL HOSPITAL. A PARODY.', W / 2, H - 9, { font: 'small', color: '#9088b0', align: 'center' });
+    if (!this.game.touchMode) drawText(g, 'F: FULLSCREEN', W - 6, H - 22, { font: 'small', color: '#7068a0', outline: O, align: 'right' });
     if (this.game.showInstallHint) {
       drawText(g, 'TIP: SHARE > ADD TO HOME SCREEN FOR FULL SCRUBS', W / 2, H - 20, { font: 'small', color: '#80c0ff', outline: O, align: 'center' });
     }
@@ -117,6 +118,10 @@ export class DemoScreen {
       getSprite(lookFor(cfg.p2.id), n);
     }
     this.fight = new FightScreen(game, cfg, { onEnd: () => (this.over = true) });
+    Sound.setAnnouncer(false);
+  }
+  leave() {
+    Sound.setAnnouncer(Save.settings.announcer);
   }
   update() {
     this.t++;
@@ -404,7 +409,7 @@ export class CharSelect {
       if (!this.sides[s].locked) this.random(s);
     }, { font: 'small', color: '#3a2c58' });
     // info box
-    const ib = { x: gx - 4, y: ry + 15, w: gw + 6, h: H - ry - 19 };
+    const ib = { x: gx - 4, y: ry + 15, w: gw + 6, h: H - ry - 30 };
     panel(g, ib.x, ib.y, ib.w, ib.h, { bg: '#120c20' });
     const focusSide = this.cpuPick && this.sides[0].locked ? 1 : this.sides[0].locked && this.sides[1].human && !this.sides[1].locked ? 1 : 0;
     const fi = this.sides[focusSide].cur;
@@ -1025,7 +1030,7 @@ export class OptionsScreen {
     const S = Save.settings;
     const cyc = (key, vals) => ({ onRight: () => { S[key] = vals[(vals.indexOf(S[key]) + 1) % vals.length]; this.changed(); }, onLeft: () => { S[key] = vals[(vals.indexOf(S[key]) - 1 + vals.length) % vals.length]; this.changed(); } });
     const tog = (key) => ({ value: () => (S[key] ? 'ON' : 'OFF'), onRight: () => { S[key] = !S[key]; this.changed(); }, onLeft: () => { S[key] = !S[key]; this.changed(); } });
-    const vol = (key) => ({ value: () => '|'.repeat(Math.round(S[key] * 10)).padEnd(10, '.'), onRight: () => { S[key] = Math.min(1, Math.round(S[key] * 10 + 1) / 10); this.changed(); if (key === 'sfx') Sound.sfx('hitM'); }, onLeft: () => { S[key] = Math.max(0, Math.round(S[key] * 10 - 1) / 10); this.changed(); if (key === 'sfx') Sound.sfx('hitM'); } });
+    const vol = (key) => ({ value: () => '#'.repeat(Math.round(S[key] * 10)).padEnd(10, '-'), onRight: () => { S[key] = Math.min(1, Math.round(S[key] * 10 + 1) / 10); this.changed(); if (key === 'sfx') Sound.sfx('hitM'); }, onLeft: () => { S[key] = Math.max(0, Math.round(S[key] * 10 - 1) / 10); this.changed(); if (key === 'sfx') Sound.sfx('hitM'); } });
     this.menu = new Menu([
       Object.assign({ label: 'P1 CONTROLS', value: () => S.scheme1.toUpperCase() }, cyc('scheme1', ['auto', 'classic', 'modern'])),
       Object.assign({ label: 'P2 CONTROLS', value: () => S.scheme2.toUpperCase() }, cyc('scheme2', ['classic', 'modern'])),
@@ -1237,8 +1242,8 @@ export class OrdersScreen {
 const JOKES = {
   online: { title: 'ONLINE', steps: ['CONNECTING TO MATCHMAKING...', 'VERIFYING INSURANCE...', 'CHECKING NETWORK STATUS...', 'ERROR 403: OUT-OF-NETWORK'], body: 'YOUR REQUEST FOR ONLINE PLAY HAS BEEN DENIED.\nREASON: NOT MEDICALLY NECESSARY.\n\nTO APPEAL, FAX FORM 27B/6 TO A NUMBER THAT IS NO LONGER IN SERVICE. ALLOW 6-8 WEEKS.\n\nROLLBACK NETCODE: ROLLED BACK. CROSSPLAY: CROSS. WIFI FILTER: FILTERS EVERYONE.\n\n(TRY LOCAL VERSUS. IT IS COVERED.)' },
   residency: { title: 'RESIDENCY', steps: ['CREATING YOUR INTERN...', 'ASSIGNING MENTOR...', 'CALCULATING SLEEP HOURS... 0', 'MATCH RESULTS ARE IN!'], body: 'CONGRATULATIONS! YOU MATCHED INTO:\n\nNIGHT FLOAT. FOREVER.\n\nYOUR MENTOR IS ON VACATION. YOUR PAGER HAS BEEN ISSUED. YOUR LOCKER IS A CARDBOARD BOX.\n\nPRESS CONFIRM TO REROLL YOUR INTERN.', avatar: true },
-  hub: { title: 'BREAK ROOM HUB', steps: ['ENTERING BREAK ROOM...', 'MICROWAVE QUEUE: 14 PEOPLE', 'LOADING HIPAA-COMPLIANT CHAT...'], body: 'DR_TRAUMA: HAS ANYONE SEEN [REDACTED]\nNURSE_N: [REDACTED] IN ROOM [REDACTED] IS [REDACTED]\nORTHO_BRO: BRO [REDACTED] BRO\nADMIN: PLEASE STOP ███████ IN THE CHAT\nJANITOR: WHO ATE MY YOGURT\n\nARCADE CABINETS: OUT OF ORDER (IT TICKET #4012 - ESCALATED)' },
-  pass: { title: 'SHIFT PASS & SHOP', steps: ['LOADING SHIFT PASS SEASON 1...'], body: 'FREE TIER:  1 GRANOLA BAR | PIZZA PARTY (1 SLICE PER 40 STAFF) | A "HEROES WORK HERE" YARD SIGN\nPREMIUM (1,000,000 CO-PAYS):  PARKING SPOT (TUESDAYS ONLY) | ONE (1) DAY OFF (DENIED) | THE ABILITY TO PEE\n\nSHOP: MAUVE SCRUBS - OUT OF STOCK (SUPPLY CHAIN). GOLDEN STETHOSCOPE - BACKORDERED. ERGONOMIC CHAIR - FICTIONAL.\n\nNO PAY-TO-WIN. WE CHECKED. NOTHING HELPS.' },
+  hub: { title: 'BREAK ROOM HUB', steps: ['ENTERING BREAK ROOM...', 'MICROWAVE QUEUE: 14 PEOPLE', 'LOADING HIPAA-COMPLIANT CHAT...'], body: 'DR_TRAUMA: HAS ANYONE SEEN [REDACTED]\nNURSE_N: [REDACTED] IN ROOM [REDACTED] IS [REDACTED]\nORTHO_BRO: BRO [REDACTED] BRO\nADMIN: PLEASE STOP [REDACTED] IN THE CHAT\nJANITOR: WHO ATE MY YOGURT\n\nARCADE CABINETS: OUT OF ORDER (IT TICKET #4012 - ESCALATED)' },
+  pass: { title: 'SHIFT PASS & SHOP', steps: ['LOADING SHIFT PASS SEASON 1...'], body: 'FREE TIER:\n- 1 GRANOLA BAR\n- PIZZA PARTY (1 SLICE PER 40 STAFF)\n- A "HEROES WORK HERE" YARD SIGN\nPREMIUM TIER (1,000,000 CO-PAYS):\n- PARKING SPOT (TUESDAYS ONLY)\n- ONE (1) DAY OFF (DENIED)\n- THE ABILITY TO PEE DURING SHIFT\n\nSHOP: MAUVE SCRUBS - OUT OF STOCK (SUPPLY CHAIN). GOLDEN STETHOSCOPE - BACKORDERED. ERGONOMIC CHAIR - FICTIONAL.\n\nNO PAY-TO-WIN. WE CHECKED. NOTHING HELPS.' },
 };
 
 export class JokeScreen {

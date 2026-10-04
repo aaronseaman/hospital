@@ -1,5 +1,5 @@
 // Hospital Fighter service worker: offline-first app shell.
-const VERSION = 'hf-v1';
+const VERSION = 'hf-v2';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',

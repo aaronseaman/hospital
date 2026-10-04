@@ -841,11 +841,28 @@ function drawProp(R, prop, look, sol) {
 
 // ---------- public API ----------
 const spriteCache = new Map();
+let spriteTick = 0;
+export function tickSprites() {
+  spriteTick++;
+}
 
+const SPRITE_CACHE_MAX = 700;
 export function getSprite(look, poseName, variant = '', prop) {
   const key = look.id + '|' + poseName + '|' + variant + '|' + (prop === undefined ? '-' : prop);
   let sp = spriteCache.get(key);
-  if (sp) return sp;
+  if (sp) {
+    if (sp.lru !== spriteTick) {
+      // refresh LRU position occasionally (cheap)
+      spriteCache.delete(key);
+      spriteCache.set(key, sp);
+      sp.lru = spriteTick;
+    }
+    return sp;
+  }
+  if (spriteCache.size >= SPRITE_CACHE_MAX) {
+    const it = spriteCache.keys();
+    for (let i = 0; i < 60; i++) spriteCache.delete(it.next().value);
+  }
   const baseVariant = variant === 'xray' ? 'xray' : '';
   if (variant && variant !== 'xray') {
     // derive from base raster

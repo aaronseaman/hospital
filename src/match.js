@@ -272,6 +272,7 @@ export class Match {
   }
   announce(text, dur, color, small, big, style) {
     this.ann = { text, t: 0, dur, color, small, big, style };
+    if (typeof window !== 'undefined' && window.__a11y) window.__a11y(text);
   }
   popup(f, text, color = '#ffffff') {
     const list = this.popups[f.side];
@@ -366,6 +367,14 @@ export class Match {
       if (this.superBG.t > 40 && !(f.state === 'attack' && f.move && f.move.kind === 'super') && !this.seq) this.superBG = null;
     }
 
+    // inputs are read every frame (even during cinematics) so throw techs and buffering work
+    const fightingNow = this.phase === 'fight';
+    for (let i = 0; i < 2; i++) {
+      const f = this.fighters[i];
+      if (f.ai && fightingNow) continue;
+      if (this.training && i === 1 && fightingNow) continue;
+      f.setInput(fightingNow ? inputs[i] || blankInput() : blankInput());
+    }
     if (this.freeze) {
       this.freeze.t++;
       this.fx.update();
@@ -714,6 +723,9 @@ export class Match {
     def.comboDmg += dmg;
     def.lastHitT = this.frame;
     att.stats.hits++;
+    att.stats.dmgBy = att.stats.dmgBy || {};
+    const kk = hd.kind + (att.move && att.move.spec ? ':' + (att.move.spec.id || att.move.spec.type) : att.move && att.move.id ? ':' + att.move.id : '');
+    att.stats.dmgBy[kk] = (att.stats.dmgBy[kk] || 0) + dmg;
     att.stats.maxCombo = Math.max(att.stats.maxCombo, def.comboHits);
     this.lastHitter = att.side;
     // meter / gauge / stun
@@ -747,7 +759,7 @@ export class Match {
     if (hd.crumple) {
       def.setState('crumple');
       def.vx = dir * 1.2;
-      this.popup(att, 'CHART IMPACT!', '#ffb030');
+      this.popup(att, 'CRUMPLED!', '#ffb030');
       this.shake(8, 12);
       if (this.nearWall(def, dir)) this.popup(att, 'WALL SPLAT!', '#ffb030');
     } else if (wasAir || hd.launch || (hd.launchAir && def.airborne)) {
