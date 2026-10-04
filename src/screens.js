@@ -1,13 +1,13 @@
 // All game screens and mode flows.
 import { drawText, measureText, wrapText } from './font.js';
-import { rect, fillPoly, line, circle, ring } from './fx.js';
-import { panel, header, footer, stageBG, stripeBG, drawLogo, Menu, textBox, button, O, MOTION_TEXT, MOTION_NAME, MODERN_TEXT } from './ui.js';
+import { rect, fillPoly, line } from './fx.js';
+import { panel, header, footer, stageBG, stripeBG, drawLogo, Menu, textBox, button, O, MOTION_TEXT, MODERN_TEXT } from './ui.js';
 import { FIGHTERS, FIGHTER_BY_ID, DLC, BOSSES } from './fighters.js';
-import { lookFor, LOOKS } from './looks.js';
-import { drawFighterSprite, getSprite, getPortrait, preloadFighter } from './sprites.js';
+import { lookFor } from './looks.js';
+import { drawFighterSprite, getSprite, getPortrait } from './sprites.js';
 import { POSE_NAMES } from './poses.js';
 import { STAGES, drawStage, preloadStage } from './stages.js';
-import { Match, GROUND_Y } from './match.js';
+import { Match } from './match.js';
 import { Sound } from './audio.js';
 import { Save, RANKS } from './save.js';
 

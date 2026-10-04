@@ -14,8 +14,6 @@ const DIR_P2 = { ArrowUp: 'up', ArrowLeft: 'left', ArrowDown: 'down', ArrowRight
 const PAD_CLASSIC = { 2: 'lp', 3: 'mp', 5: 'hp', 0: 'lk', 1: 'mk', 7: 'hk', 4: 'parry', 6: 'impact', 10: 'throw', 11: 'super', 8: 'taunt' };
 const PAD_MODERN = { 2: 'l', 3: 'm', 1: 'h', 0: 'sp', 5: 'auto', 4: 'parry', 6: 'impact', 7: 'super', 10: 'throw', 8: 'taunt' };
 
-const MENU_CONFIRM = ['Enter', 'Space', 'KeyU', 'KeyJ', 'KeyZ', 'NumpadEnter', 'Numpad7', 'Numpad4'];
-const MENU_BACK = ['Escape', 'Backspace', 'KeyX', 'KeyK', 'Numpad8'];
 
 export class Input {
   constructor(canvas) {

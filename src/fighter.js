@@ -88,6 +88,7 @@ export class Fighter {
     this.proj = 0;
     this.koType = null;
     this.trailT = 0;
+    this.guarding = false;
   }
 
   get opp() {
@@ -199,7 +200,7 @@ export class Fighter {
     return false;
   }
   isMotion(name) {
-    const F = [6, 9, 3], DN = [1, 2, 3];
+    const F = [6, 9, 3];
     switch (name) {
       case 'qcf': return this.motion([[2, 1], [3], [6, 9]], 18) || this.motion([[2], [6, 9]], 14);
       case 'qcb': return this.motion([[2, 3], [1], [4, 7]], 18) || this.motion([[2], [4, 7]], 14);
@@ -448,8 +449,15 @@ export class Fighter {
       this.setState('jumpsquat');
       return;
     }
+    // proximity guard: holding back while under threat stands/crouches in block instead of walking away
+    this.guarding = (d === 4 || d === 1) && this.underThreat();
     if (d <= 3) {
       if (this.state !== 'crouch') this.setState('crouch');
+      this.vx = 0;
+      return;
+    }
+    if (this.guarding) {
+      if (this.state !== 'idle') this.setState('idle');
       this.vx = 0;
       return;
     }
@@ -776,6 +784,15 @@ export class Fighter {
     return true;
   }
 
+  underThreat() {
+    const o = this.opp;
+    const dist = Math.abs(o.x - this.x);
+    if (o.state === 'attack' && o.move && o.inMovePhase() !== 'recovery' && o.move.kind !== 'throw' && dist < (o.move.kind === 'normal' ? 100 : 200)) return true;
+    for (const p of this.m.projectiles) if (p.owner === o && Math.abs(p.x - this.x) < 90) return true;
+    for (const ob of this.m.objects) if (ob.owner === o && (ob.kind === 'beam' || ob.kind === 'zone')) return true;
+    return false;
+  }
+
   // ---------------- per-state updates ----------------
   airControl(d) {
     if (this.ai && !this.noAirAttack) {
@@ -910,6 +927,7 @@ export class Fighter {
     const mv = this.move;
     switch (st) {
       case 'idle': {
+        if (this.guarding) return 'block';
         const f = Math.floor((this.m.frame + this.side * 13) / 9) % 4;
         if (this.burnout && f % 2) return 'burnout';
         return ['idle1', 'idle2', 'idle3', 'idle2'][f];
@@ -919,6 +937,7 @@ export class Fighter {
         return ['walk1', 'walk2', 'walk3', 'walk4'][this.walkPhase >= 0 ? f : 3 - f];
       }
       case 'crouch':
+        if (this.guarding) return 'crouchBlock';
         return t < 3 ? 'crouchHalf' : 'crouch';
       case 'land':
         return 'jumpSquat';
@@ -1001,7 +1020,14 @@ export class Fighter {
 
   propFor(pose) {
     if (pose === 'impactW' || pose === 'impactA') return 'clipboard';
-    return undefined;
+    const id = this.def.id;
+    const mv = this.move;
+    if (id === 'trauma') {
+      if (mv && mv.kind === 'super') return 'paddles';
+      if (mv && mv.kind === 'special' && mv.spec.type === 'projectile' && (pose === 'projW' || pose === 'projA')) return 'syringe';
+    }
+    const P = SIGNATURE_PROPS[id];
+    return P ? P[pose] : undefined;
   }
 
   // ---------------- boxes ----------------
@@ -1109,6 +1135,18 @@ export class Fighter {
   }
 }
 
+const SIGNATURE_PROPS = {
+  janitor: { slide: 'mop', win1: 'mop', win2: 'mop', introA: 'mop', tauntA: 'mop', tauntB: 'mop' },
+  chaplain: { pray: 'book', stance: 'book', win1: 'book', introA: 'book', tauntA: 'book' },
+  psych: { stance: 'notepad', tauntA: 'notepad', tauntB: 'notepad', introA: 'notepad', win2: 'notepad' },
+  pharmacist: { lobW: 'bottle', lobA: 'bottle', introA: 'bottle', win1: 'bottle', tauntA: 'bottle' },
+  labtech: { lobW: 'tube', lobA: 'tube', stretchA: 'tube', win1: 'tube', introA: 'tube' },
+  dietitian: { introA: 'carrot', win1: 'carrot', tauntA: 'carrot', tauntB: 'carrot' },
+  it: { tauntA: 'mug', tauntB: 'mug', introA: 'mug', win2: 'mug' },
+  admin: { introA: 'briefcase', tauntA: 'briefcase', tauntB: 'briefcase', win2: 'briefcase' },
+  ortho: { win2: 'mug' },
+};
+
 export function blankInput() {
   return { left: false, right: false, up: false, down: false, press: {}, hold: {} };
 }
@@ -1116,8 +1154,6 @@ export function blankInput() {
 // =====================================================================================
 // Special move behaviors
 // =====================================================================================
-const P_BTN = (mv) => mv.str;
-
 function projOrigin(f) {
   return { x: f.x + f.facing * 26 * f.s, y: f.y + 44 * f.s };
 }
@@ -1158,7 +1194,6 @@ export const SPECIAL_TYPES = {
         f.noAirAttack = true;
         return;
       }
-      if (f.airborne === false && mv.wasAir) return 'done';
     },
     pose(f, mv, ph) {
       const p = mv.spec;
@@ -1262,7 +1297,7 @@ export const SPECIAL_TYPES = {
       const lar = p.poses && p.poses[0] === 'lariat1';
       const box = lar || (p.poses && p.poses[0] === 'spin1' && p.speed < 0.5) ? { x: -30 * f.s, y: 18, w: 60 * f.s, h: 40 } : { x: -6, y: p.hover ? 2 : 16, w: 42 * f.s, h: 30 };
       if (p.poses && p.poses[0] === 'lkA') Object.assign(box, { x: 4, y: 16, w: 40 * f.s, h: 44 });
-      return { box: f.toWorld(box), hd: { dmg: f.specialDmg(mv, p.dmg), hitstun: 16, blockstun: 12, guard: 'mid', str: 1, kind: 'special', pushHit: 1.5, pushBlock: 2, chip: true, kd: mv.hits >= mv.maxHits - 1 && !lar ? false : false, lastKd: true } };
+      return { box: f.toWorld(box), hd: { dmg: f.specialDmg(mv, p.dmg), hitstun: 16, blockstun: 12, guard: 'mid', str: 1, kind: 'special', pushHit: 1.5, pushBlock: 2, chip: true } };
     },
   },
 
@@ -1444,7 +1479,6 @@ export const SPECIAL_TYPES = {
     start(f, mv) {
       mv.active = 1;
       f.invuln = mv.startup + 6;
-      mv.kick = (f.lastSpecialKick = f.buf.length && false);
       Sound.sfx('teleport');
       f.m.fx.burst(f.x, f.y + 40, 'bsod', 6);
     },

@@ -4,7 +4,7 @@ import { Save } from './save.js';
 import { Sound } from './audio.js';
 import { TitleScreen, FightScreen, PauseScreen, DemoScreen } from './screens.js';
 import { drawText } from './font.js';
-import { rect, fillPoly } from './fx.js';
+import { rect } from './fx.js';
 import { tickSprites } from './sprites.js';
 
 const GAME_H = 216;

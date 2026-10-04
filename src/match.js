@@ -1,7 +1,7 @@
 // Match: owns two fighters, projectiles, objects, hazards, round flow, camera and rendering.
 import { Fighter, GRAV, WALL_L, WALL_R, blankInput, superDamage } from './fighter.js';
 import { FX, drawProjectileArt, drawTrap, drawHazard, rect, circle, ring, line, fillPoly } from './fx.js';
-import { drawFighterSprite, getSprite, getPortrait } from './sprites.js';
+import { drawFighterSprite, getPortrait } from './sprites.js';
 import { drawText, measureText, wrapText } from './font.js';
 import { drawStage, drawStageFront, STAGES } from './stages.js';
 import { drawHUD } from './hud.js';
@@ -1812,7 +1812,6 @@ class GrabSeq extends Seq {
     this.def.cinePose = 'hitHigh';
     this.place(20, 0);
     Sound.sfx('throw');
-    this.m.popup(this.att, this.spec.name + '!', '#ffd040');
   }
   update() {
     const { m, att, def } = this;

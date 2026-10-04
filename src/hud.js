@@ -1,6 +1,6 @@
 // In-fight HUD: Patient Stability bars, Shift Timer, Chart Gauge, Adrenaline Meter, combos, popups.
 import { drawText, measureText } from './font.js';
-import { rect, fillPoly, line } from './fx.js';
+import { rect, line } from './fx.js';
 import { getPortrait } from './sprites.js';
 
 const O = '#140c1c';

@@ -31,6 +31,11 @@ if (mode === 'roster') {
     drawFighterSprite(g, lookFor(id), n, x, y, 1, q.get('v')||'');
     g.fillStyle = '#fff'; g.font = '7px monospace'; g.fillText(n, x-40, y+7);
   });
+} else if (mode === 'props') {
+  const list = [['janitor','slide','mop'],['janitor','win1','mop'],['chaplain','pray','book'],['psych','stance','notepad'],['pharmacist','lobW','bottle'],['labtech','stretchA','tube'],['dietitian','introA','carrot'],['it','tauntB','mug'],['admin','introA','briefcase'],['trauma','superFlash','paddles'],['trauma','projA','syringe'],['trauma','impactA','clipboard']];
+  const W = 6 * 80, H = 2 * 100; c.width = W; c.height = H; c.style.width = W*S+'px'; c.style.height = H*S+'px';
+  g.fillStyle = '#5a6a7a'; g.fillRect(0,0,W,H);
+  list.forEach(([id,pose,prop], i) => drawFighterSprite(g, lookFor(id), pose, (i%6)*80+40, Math.floor(i/6)*100+92, 1, '', prop));
 } else if (mode === 'portraits') {
   const ids = Object.keys(LOOKS);
   const W = 6*36, H = 3*36; c.width=W; c.height=H; c.style.width=W*S+'px'; c.style.height=H*S+'px';
