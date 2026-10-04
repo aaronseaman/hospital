@@ -626,10 +626,31 @@ export class FightScreen {
     this.match.musicId = opts.music || (st ? st.music : 'er');
     Sound.music(this.match.musicId);
     if (cfg.mode === 'training') this.match.training.boxes = false;
+    this.tipT = !Save.data.seenIntro && cfg.mode !== 'demo' ? 520 : 0;
+  }
+  drawTip(g) {
+    if (this.tipT <= 0 || this.match.phase !== 'fight') return;
+    const { W } = this.game;
+    const dev = this.game.input.lastDevice;
+    const modern = this.cfg.p1.scheme === 'modern';
+    let lines;
+    if (dev === 'touch' || (this.game.touchMode && dev !== 'pad' && dev !== 'keyboard')) lines = ['DRAG THE LEFT SIDE TO MOVE. HOLD AWAY TO BLOCK.', modern ? 'L M H = ATTACKS. SP + DIRECTION = SPECIAL MOVE.' : 'LP MP HP / LK MK HK = PUNCHES AND KICKS.', 'SUPER LIGHTS UP WHEN YOUR PINK ADRENALINE BAR IS FULL.'];
+    else if (dev === 'pad') lines = ['STICK/D-PAD TO MOVE. HOLD AWAY TO BLOCK.', modern ? 'X Y B = L M H, A = SPECIAL, RT = SUPER.' : 'X Y RB = PUNCHES, A B RT = KICKS, R3 = SUPER.', 'LB = PARRY (HAND HYGIENE). LT = CHART IMPACT.'];
+    else lines = ['WASD TO MOVE. HOLD AWAY TO BLOCK. ESC TO PAUSE.', modern ? 'U I O = L M H. J = SPECIAL. SPACE = SUPER.' : 'U I O = PUNCHES. J K L = KICKS. SPACE = SUPER.', 'P = PARRY.  ; = CHART IMPACT.  H = THROW.  \u2193\u2198\u2192 + PUNCH = SPECIAL!'];
+    const w = Math.min(this.game.W - 16, 248), h = 12 + lines.length * 7;
+    const x = Math.round(W / 2 - w / 2), y = 54;
+    const a = Math.min(1, this.tipT / 30);
+    g.globalAlpha = a * 0.88;
+    rect(g, x, y, w, h, '#0a0614');
+    rect(g, x, y, w, 1, '#ffe040');
+    g.globalAlpha = a;
+    drawText(g, 'FIRST SHIFT? QUICK ORIENTATION:', W / 2, y + 3, { font: 'small', color: '#ffe040', align: 'center' });
+    lines.forEach((l, i) => drawText(g, l, W / 2, y + 11 + i * 7, { font: 'small', color: '#ffffff', align: 'center' }));
+    g.globalAlpha = 1;
   }
   matchSettings() {
     const s = Save.settings;
-    return { touch: this.game.controlsVisible(), contrast: s.contrast, shake: s.shake, callouts: s.callouts };
+    return { touch: this.game.controlsVisible(), contrast: s.contrast, shake: s.shake, callouts: s.callouts, commentary: s.commentary };
   }
   update() {
     const g = this.game;
@@ -641,6 +662,10 @@ export class FightScreen {
     }
     const inputs = [g.input.frameFor(0), g.input.frameFor(1)];
     this.match.update(inputs);
+    if (this.tipT > 0 && this.match.phase === 'fight' && --this.tipT === 0) {
+      Save.data.seenIntro = true;
+      Save.save();
+    }
     if (this.result) {
       if (++this.endT === 30) {
         const r = this.result;
@@ -650,6 +675,7 @@ export class FightScreen {
   }
   draw(g) {
     this.match.draw(g, this.game.W, this.game.H);
+    this.drawTip(g);
   }
   hudMeterFull() {
     return this.match.fighters[0].meter >= 100;
@@ -1047,6 +1073,7 @@ export class OptionsScreen {
       Object.assign({ label: 'CRT SCANLINES' }, tog('crt')),
       Object.assign({ label: 'HIGH CONTRAST HUD' }, tog('contrast')),
       Object.assign({ label: 'MOVE CALLOUTS' }, tog('callouts')),
+      Object.assign({ label: 'COMMENTARY' }, tog('commentary')),
       { label: 'RESET PROGRESS', onSelect: () => game.push(new ChoiceScreen(game, 'ERASE ALL RECORDS?', [{ label: 'YES (HIPAA WIPE)', onSelect: () => { Save.reset(); game.applySettings(); game.pop(); } }])) },
       { label: 'BACK', onSelect: () => this.close() },
     ], { lineH: 11 });
@@ -1379,9 +1406,15 @@ export function startArcade(game, sel, story) {
   }
   const bosses = BOSSES.filter((b) => b !== me.id);
   while (bosses.length < 2) bosses.unshift(pool.pop());
-  const rival = me.rival && !bosses.includes(me.rival) ? me.rival : pool.pop();
   const nRandom = story ? 5 : 3;
-  const ladder = pool.slice(0, nRandom).concat([rival], bosses);
+  let rival, ladder;
+  if (me.rival && bosses.includes(me.rival)) {
+    rival = me.rival;
+    ladder = pool.slice(0, nRandom + 1).concat(bosses);
+  } else {
+    rival = me.rival || pool.pop();
+    ladder = pool.slice(0, nRandom).concat([rival], bosses);
+  }
   const A = { sel, story, ladder, idx: 0, rivalId: rival };
   if (story) {
     game.go(new StoryScreen(game, { fid: me.id, alt: sel.alt, stage: HOME_STAGE[me.id] === 'morgue' ? 'icu' : HOME_STAGE[me.id], night: true, title: 'GRAND ROUNDS', pages: [me.story], music: 'select', onDone: () => arcadeNext(game, A) }));

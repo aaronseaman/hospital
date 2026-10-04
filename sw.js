@@ -1,11 +1,11 @@
 // Hospital Fighter service worker: offline-first app shell.
-const VERSION = 'hf-v2';
+const VERSION = 'hf-v3';
 const ASSETS = [
   './', './index.html', './manifest.webmanifest',
   './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png',
   './src/main.js', './src/input.js', './src/save.js', './src/audio.js', './src/screens.js', './src/ui.js', './src/font.js',
   './src/fx.js', './src/match.js', './src/fighter.js', './src/fighters.js', './src/moves.js', './src/poses.js',
-  './src/sprites.js', './src/looks.js', './src/stages.js', './src/hud.js', './src/ai.js',
+  './src/sprites.js', './src/looks.js', './src/stages.js', './src/hud.js', './src/ai.js', './src/commentary.js',
 ];
 
 self.addEventListener('install', (e) => {

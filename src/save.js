@@ -14,7 +14,7 @@ export const RANKS = [
 const DEFAULTS = {
   settings: {
     scheme1: 'auto', scheme2: 'classic', touchScheme: 'modern', difficulty: 2, rounds: 2, timer: 99,
-    music: 0.7, sfx: 0.8, announcer: true, shake: true, hazards: true, crt: false, contrast: false, callouts: true, touchControls: 'auto',
+    music: 0.7, sfx: 0.8, announcer: true, shake: true, hazards: true, crt: false, contrast: false, callouts: true, commentary: true, touchControls: 'auto',
   },
   stats: { matches: 0, wins: 0, losses: 0, supers: 0, perfects: 0, parries: 0, counters: 0, throws: 0, byFighter: {}, cleared: 0, clearedBy: {} },
   copays: 100,

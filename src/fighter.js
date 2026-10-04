@@ -256,6 +256,7 @@ export class Fighter {
     this.burnout = true;
     this.m.popup(this, 'BURNOUT!', '#c0c0c0');
     this.m.announce('CHARTING BURNOUT', 50, '#a0a0b0', true);
+    if (this.m.booth) this.m.booth.event('burnout');
     Sound.sfx('burnout');
     this.m.fx.burst(this.x, this.y + 60, 'paper', 14);
   }

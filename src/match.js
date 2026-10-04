@@ -10,6 +10,7 @@ import { Sound } from './audio.js';
 import { lookFor } from './looks.js';
 import { FIGHTER_BY_ID } from './fighters.js';
 import { AI } from './ai.js';
+import { Commentary } from './commentary.js';
 
 export const GROUND_Y = 194;
 export const WORLD_W = 800;
@@ -72,6 +73,8 @@ export class Match {
       return f;
     };
     this.fighters = [mk(0, cfg.p1), mk(1, cfg.p2)];
+    this.booth = new Commentary();
+    this.booth.enabled = opts.settings ? opts.settings.commentary !== false : true;
     if (this.mods.has('fullcode')) for (const f of this.fighters) f.meter = 300;
     this.startRound(true);
   }
@@ -81,6 +84,7 @@ export class Match {
     const [a, b] = this.fighters;
     a.resetRound(WORLD_W / 2 - 70, 1);
     b.resetRound(WORLD_W / 2 + 70, -1);
+    a.lowCommented = b.lowCommented = false;
     if (this.mods.has('fullcode')) for (const f of this.fighters) f.meter = 300;
     this.projectiles = [];
     this.objects = [];
@@ -148,6 +152,7 @@ export class Match {
         this.phaseT = 0;
         a.setState('idle');
         b.setState('idle');
+        if (this.round === 1) this.booth.event('start', true);
       }
     } else if (this.phase === 'fight') {
       if (this.timer !== Infinity && !this.freeze && !this.seq) {
@@ -156,6 +161,7 @@ export class Match {
           this.timerFrac = 0;
           this.timer--;
           if (this.timer <= 10 && this.timer > 0) Sound.sfx('timer');
+          if (this.timer === 10) this.booth.event('timelow');
           if (this.timer <= 0) this.timeOver();
         }
       }
@@ -305,6 +311,7 @@ export class Match {
   superFreeze(f, level, critical) {
     this.freeze = { f, level, critical, t: 0, dur: level >= 3 ? 64 : level === 2 ? 46 : 36 };
     this.lastSuperCritical = critical;
+    this.booth.event('super', level >= 2);
     if (level >= 3) this.superBG = { f, t: 0, critical, color: f.def.super.color };
     Sound.sfx('super');
     const name = f.def.super.name;
@@ -361,6 +368,7 @@ export class Match {
     if (this.shakeT > 0) this.shakeT--;
     else this.shakeMag = 0;
     if (this.koFlash > 0) this.koFlash--;
+    this.booth.update();
     if (this.superBG) {
       this.superBG.t++;
       const f = this.superBG.f;
@@ -627,6 +635,7 @@ export class Match {
         def.stats.parries++;
         if (perfect) {
           def.stats.perfects++;
+          this.booth.event('perfect');
           this.popup(def, 'PERFECT HAND HYGIENE!', '#60ff90');
           Sound.say('Perfect hand hygiene!');
           this.slowmo = 30;
@@ -805,6 +814,13 @@ export class Match {
     this.excite = Math.min(1, this.excite + 0.06 + strIdx * 0.04 + (counter ? 0.1 : 0));
     // combo tags
     if (COMBO_TAGS[def.comboHits]) this.popup(att, COMBO_TAGS[def.comboHits], '#80e0ff');
+    if (def.comboHits === 5) this.booth.event('combo');
+    if (counter === 'punish' && def.comboHits === 1) this.booth.event('punish');
+    if (hd.impact) this.booth.event('impact');
+    if (def.hp > 0 && def.hp < def.maxHp * 0.2 && !def.lowCommented) {
+      def.lowCommented = true;
+      this.booth.event('lowhp');
+    }
     // stun check
     if (def.stun >= 520 && def.hp > 0 && !hd.noKO && def.state !== 'airhit') {
       this.makeDizzy(def);
@@ -829,6 +845,7 @@ export class Match {
   }
 
   makeDizzy(def) {
+    this.booth.event('dizzy', true);
     def.setState('dizzy');
     def.move = null;
     def.dizzyT = 150;
@@ -892,6 +909,7 @@ export class Match {
       f.hitstop = 8;
     }
     this.popup(b, 'SECOND OPINION!', '#80d0ff');
+    this.booth.event('tech');
     this.fx.spark((a.x + b.x) / 2, 50, 1, 'block');
     Sound.sfx('tech');
   }
@@ -1341,6 +1359,7 @@ export class Match {
     }
     if (freeze) this.drawCutIn(g, W, H, freeze);
     if (hud && this.blackout <= 0) drawHUD(g, this, W, H);
+    if (hud && this.blackout <= 0 && !this.freeze && !this.training) this.booth.draw(g, W, H, H - 26);
     this.drawAnnouncements(g, W, H);
     if (this.training && this.training.boxes) this.drawBoxes(g, camX);
   }
